@@ -1,0 +1,550 @@
+/* ==========================================================================
+   RETRO FANTASY RPG LOGIN & DYNAMIC BACKGROUND TRANSITIONS (style.css)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ROOT VARIABLES & PIXEL PALETTE
+   -------------------------------------------------------------------------- */
+:root {
+    --font-pixel: 'Press Start 2P', monospace;
+    --font-code: 'VT323', monospace;
+
+    /* Color Palette */
+    --bg-dark-blue: #0b0f19;
+    --panel-bg: rgba(26, 26, 38, 0.92);
+    --panel-inner-bg: rgba(16, 16, 26, 0.95);
+    --panel-header-bg: #2d2d42;
+
+    /* Pixel Borders */
+    --gold-primary: #f1c40f;
+    --gold-light: #f9e79f;
+    --gold-dark: #b7950b;
+    --border-dark: #0a0a12;
+
+    /* Text Colors */
+    --text-white: #ffffff;
+    --text-gold: #f1c40f;
+    --text-muted: #8e94a5;
+
+    /* HP Bar / Strength Colors */
+    --hp-gray: #5a5d6e;
+    --hp-red: #e74c3c;
+    --hp-yellow: #f1c40f;
+    --hp-green: #2ecc71;
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & NO ROUNDED CORNERS
+   -------------------------------------------------------------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-pixel);
+    border-radius: 0 !important; /* CRITICAL: ABSOLUTELY NO ROUNDED CORNERS FOR 16-BIT PIXEL ART */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+}
+
+html, body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-dark-blue);
+    color: var(--text-white);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   3. DYNAMIC FULL-SCREEN BACKGROUND CROSS-FADE LAYERS
+   -------------------------------------------------------------------------- */
+.bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    z-index: 1;
+}
+
+.bg-layer.active {
+    opacity: 1;
+}
+
+/* CRT Scanline Overlay */
+.scanline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0) 50%,
+        rgba(0,0,0,0.25) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   4. TOP-LEFT KNIGHT PROFILE HUD
+   -------------------------------------------------------------------------- */
+.top-left-hud {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 100;
+}
+
+.hud-profile-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: rgba(14, 16, 24, 0.96);
+    border: 3px solid var(--gold-primary);
+    box-shadow:
+        0 0 0 3px #000,
+        0 0 0 6px var(--gold-primary),
+        0 10px 25px rgba(0, 0, 0, 0.85);
+    padding: 18px 22px;
+}
+
+.profile-avatar-frame {
+    width: 105px;
+    height: 105px;
+    min-width: 105px;
+    min-height: 105px;
+    background: #000;
+    border: 4px solid var(--gold-primary);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 2px #000;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 17% 65%;
+    transform: scale(3.2);
+    transform-origin: 17% 65%;
+    transition: transform 0.3s ease, object-position 0.3s ease;
+}
+
+.hud-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 240px;
+    flex: 1;
+}
+
+.hud-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.knight-title {
+    color: var(--text-gold);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.knight-equipment-tag {
+    font-size: 0.55rem;
+    color: #8ab4f8;
+    background: #111827;
+    padding: 3px 7px;
+    border: 1px solid #2b3e5c;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Adjacent Strength / HP Bar to the Right of Profile */
+.hud-bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.hud-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--text-white);
+}
+
+.bar-label {
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.bar-percent {
+    color: var(--text-gold);
+}
+
+.hud-hp-bar-container {
+    width: 100%;
+    height: 16px;
+    background: #080911;
+    border: 2px solid #222638;
+    padding: 2px;
+    box-shadow: inset 1px 1px 0px #000;
+    display: flex;
+    align-items: center;
+}
+
+.hud-hp-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
+    box-shadow: inset 0px 2px 0px rgba(255,255,255,0.3);
+    background-image: linear-gradient(
+        to right,
+        rgba(0,0,0,0.2) 1px,
+        transparent 1px
+    );
+    background-size: 8px 100%;
+}
+
+.hud-hp-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
+    box-shadow: inset 0px 3px 0px rgba(255,255,255,0.35);
+    background-image: linear-gradient(
+        to right,
+        rgba(255,255,255,0.14) 0.5px,
+        transparent 0.5px
+    );
+    background-size: 10px 100%;
+}
+
+/* User Specified Bar Colors: Red for weak, Yellow for moderate, Green for strong */
+.hud-hp-bar.gray-bar { background-color: var(--hp-gray); }
+.hud-hp-bar.red-bar { background-color: var(--hp-red); }
+.hud-hp-bar.yellow-bar { background-color: var(--hp-yellow); }
+.hud-hp-bar.green-bar { background-color: var(--hp-green); }
+
+/* --------------------------------------------------------------------------
+   5. CENTERED RPG LOGIN WINDOW
+   -------------------------------------------------------------------------- */
+.login-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.login-wrapper.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92);
+}
+
+.rpg-login-box {
+    width: 100%;
+    max-width: 480px;
+    background: var(--panel-bg);
+    border: 3px solid var(--gold-primary);
+    box-shadow: 
+        0 0 0 3px #000,
+        0 0 0 6px var(--gold-primary),
+        0 14px 36px rgba(0, 0, 0, 0.9);
+}
+
+.rpg-window-header {
+    background: var(--panel-header-bg);
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--border-dark);
+}
+
+.window-title {
+    color: var(--text-gold);
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.window-controls {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+}
+
+.rpg-window-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: var(--panel-inner-bg);
+}
+
+/* Input Fields */
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-label {
+    font-size: 0.65rem;
+    color: var(--text-gold);
+}
+
+/* Hero Name Validation Error */
+.hero-name-error {
+    font-size: 0.5rem;
+    color: var(--hp-red);
+    font-family: var(--font-pixel);
+    letter-spacing: 0.5px;
+    padding: 2px 0 0 2px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.25s ease;
+    pointer-events: none;
+}
+
+.hero-name-error.visible {
+    opacity: 1;
+    max-height: 30px;
+}
+
+.input-box {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+#username-input, #password-input {
+    width: 100%;
+    background: #080810;
+    color: #00ffcc;
+    font-size: 1.1rem;
+    font-family: var(--font-code);
+    padding: 12px 48px 12px 14px;
+    border: 4px solid #333348;
+    outline: none;
+    letter-spacing: 2px;
+    box-shadow: inset 2px 2px 0px #000, inset -2px -2px 0px #222;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#username-input {
+    color: #f1c40f;
+    padding-right: 14px;
+    background: #10101a;
+}
+
+#password-input::placeholder {
+    color: #4a4a60;
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+}
+
+#password-input:focus {
+    border-color: var(--gold-primary);
+    box-shadow: 
+        inset 2px 2px 0px #000,
+        0 0 10px rgba(241, 196, 15, 0.4);
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #242436;
+    border: 2px solid #555;
+    color: var(--text-white);
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.toggle-btn:hover {
+    background: #3a3a52;
+}
+
+/* --------------------------------------------------------------------------
+   6. ENTER BUTTON (BLOCKY 3D RPG BUTTON)
+   -------------------------------------------------------------------------- */
+.rpg-button {
+    width: 100%;
+    background: #c0392b;
+    color: var(--text-white);
+    font-size: 0.9rem;
+    padding: 14px;
+    border: 4px solid var(--border-dark);
+    cursor: pointer;
+    box-shadow: 
+        inset -4px -4px 0px 0px #7b241c,
+        inset 4px 4px 0px 0px #e74c3c,
+        0 4px 0px 0px #000;
+    text-shadow: 2px 2px 0px #000;
+    letter-spacing: 2px;
+    transition: background 0.1s, transform 0.05s, box-shadow 0.05s;
+    user-select: none;
+}
+
+.rpg-button:hover {
+    background: #d94332;
+    box-shadow: 
+        inset -4px -4px 0px 0px #902b21,
+        inset 4px 4px 0px 0px #ff5a47,
+        0 4px 0px 0px #000;
+}
+
+.rpg-button:active, .rpg-button.btn-pressed {
+    transform: translateY(4px);
+    box-shadow: 
+        inset -2px -2px 0px 0px #7b241c,
+        inset 2px 2px 0px 0px #e74c3c,
+        0 0px 0px 0px #000;
+}
+
+/* --------------------------------------------------------------------------
+   7. STRENGTH DISPLAYED BELOW THE ENTER BUTTON
+   -------------------------------------------------------------------------- */
+.strength-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.strength-dialogue-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #090912;
+    border: 3px solid var(--gold-dark);
+    padding: 12px 14px;
+    min-height: 52px;
+}
+
+.dialogue-icon {
+    font-size: 1.2rem;
+}
+
+.strength-text {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.strength-text.pop-anim {
+    transform: scale(1.05);
+}
+
+.strength-text.empty-state { color: var(--text-muted); }
+.strength-text.weak-state { color: var(--hp-red); }
+.strength-text.moderate-state { color: var(--hp-yellow); }
+.strength-text.strong-state { color: var(--hp-green); }
+
+/* Requirement Tags */
+.checklist {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.check-item {
+    font-size: 0.55rem;
+    padding: 4px 6px;
+    background: #11111a;
+    border: 2px solid #333;
+    color: #666;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.check-item.met {
+    border-color: #2ecc71;
+    color: #2ecc71;
+    background: rgba(46, 204, 113, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   8. FOOTER
+   -------------------------------------------------------------------------- */
+.battle-footer {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 6px 16px;
+    border: 2px solid #444;
+    color: var(--text-muted);
+    font-size: 0.55rem;
+    text-align: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.battle-footer.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 600px) {
+    .top-left-hud {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+    }
+
+    .hud-profile-card {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .profile-avatar-frame {
+        width: 76px;
+        height: 76px;
+        min-width: 76px;
+        min-height: 76px;
+    }
+
+    .hud-stats {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .rpg-login-box {
+        max-width: 100%;
+    }
+}

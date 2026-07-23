@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Fantasy RPG Login & Password Strength Checker</title>
+    <!-- Google Fonts for Retro Pixel Aesthetics -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Dynamic Full-Screen Background Cross-Fade Layers -->
+    <div id="bg-layer-1" class="bg-layer active" style="background-image: url('assets/knight-unequiped.png');"></div>
+    <div id="bg-layer-2" class="bg-layer" style="background-image: url('assets/knight-unequiped.png');"></div>
+
+    <!-- Scanline CRT Retro Overlay -->
+    <div class="scanline-overlay"></div>
+
+    <!-- Top-Left Knight Profile HUD -->
+    <header class="top-left-hud">
+        <div class="hud-profile-card">
+            <!-- Knight Profile Thumbnail -->
+            <div class="profile-avatar-frame">
+                <img id="hud-knight-img" src="assets/knight-unequiped.png" alt="Knight Avatar" class="profile-avatar">
+            </div>
+            
+            <!-- Knight Stats & Adjacent Strength Bar -->
+            <div class="hud-stats">
+                <div class="hud-header-info">
+                    <span class="knight-title" id="hud-knight-title">HERO KNIGHT</span>
+                    <span class="knight-equipment-tag" id="hud-equipment-tag">UNEQUIPPED</span>
+                </div>
+                
+                <!-- Strength / HP Bar to the Right of Profile -->
+                <div class="hud-bar-wrapper">
+                    <div class="hud-bar-header">
+                        <span class="bar-label">POWER HP</span>
+                        <span id="hud-percentage-text" class="bar-percent">0%</span>
+                    </div>
+                    <div class="hud-hp-bar-container">
+                        <div id="hud-hp-bar" class="hud-hp-bar gray-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Centered RPG Login Container -->
+    <main class="login-wrapper" id="login-wrapper">
+        <div class="rpg-login-box" id="rpg-login-box">
+            <!-- RPG Window Title Bar -->
+            <div class="rpg-window-header">
+                <span class="window-title">⚔️ GUILD LOGIN ⚔️</span>
+                <span class="window-controls">REALM v1.0</span>
+            </div>
+
+            <!-- Login Content -->
+            <div class="rpg-window-content">
+                <!-- Username Input -->
+                <div class="input-wrapper">
+                    <label for="username-input" class="input-label">HERO NAME:</label>
+                    <div class="input-box">
+                        <input type="text" id="username-input" placeholder="Enter hero name..." autocomplete="off">
+                    </div>
+                    <span id="hero-name-error" class="hero-name-error">⚠ Please enter the hero's name</span>
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-wrapper">
+                    <label for="password-input" class="input-label">SECRET SPELL / PASSWORD:</label>
+                    <div class="input-box">
+                        <input type="password" id="password-input" placeholder="Enter your password..." autocomplete="new-password">
+                        <button type="button" id="toggle-pwd-btn" class="toggle-btn" title="Toggle Password Visibility">👁️</button>
+                    </div>
+                </div>
+
+                <!-- Enter / Check Strength Button -->
+                <button type="button" id="check-btn" class="rpg-button">ENTER</button>
+
+                <!-- STRENGTH DISPLAYED BELOW THE ENTER BUTTON -->
+                <div class="strength-section">
+                    <div class="strength-dialogue-box">
+                        <div class="dialogue-icon">💬</div>
+                        <div id="strength-text" class="strength-text empty-state">The Knight awaits a challenge...</div>
+                    </div>
+
+                    <!-- Password Rules Checklist -->
+                    <div class="checklist">
+                        <div class="check-item" id="req-length">8+ Chars (10+ Max)</div>
+                        <div class="check-item" id="req-upper">A-Z Upper</div>
+                        <div class="check-item" id="req-lower">a-z Lower</div>
+                        <div class="check-item" id="req-number">0-9 Numbers</div>
+                        <div class="check-item" id="req-special">!@# Special</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="battle-footer" id="battle-footer">
+        <span>ENTER YOUR PASSWORD TO EQUIP YOUR HERO FOR BATTLE</span>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
