@@ -260,8 +260,11 @@ html, body {
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 20px;
+    overflow-y: auto;
+    padding-top: 40px;
+    padding-bottom: 40px;
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
@@ -396,6 +399,47 @@ html, body {
 
 .toggle-btn:hover {
     background: #3a3a52;
+}
+
+/* --------------------------------------------------------------------------
+   6b. GENERATE STRONG PASSWORD BUTTON
+   -------------------------------------------------------------------------- */
+.generate-btn {
+    width: 100%;
+    margin-top: 6px;
+    background: #0d1f2d;
+    color: #00ffcc;
+    font-size: 0.5rem;
+    font-family: var(--font-pixel);
+    padding: 9px 14px;
+    border: 2px solid #00a896;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    text-align: center;
+    box-shadow:
+        inset -2px -2px 0px 0px #007a6e,
+        inset 2px 2px 0px 0px #00e5cc,
+        0 3px 0px 0px #000;
+    text-shadow: 0 0 6px rgba(0, 255, 204, 0.6);
+    transition: background 0.1s, transform 0.05s, box-shadow 0.05s, color 0.1s;
+    user-select: none;
+}
+
+.generate-btn:hover {
+    background: #112b3c;
+    color: #33ffdd;
+    box-shadow:
+        inset -2px -2px 0px 0px #009080,
+        inset 2px 2px 0px 0px #00ffee,
+        0 3px 0px 0px #000;
+}
+
+.generate-btn:active {
+    transform: translateY(3px);
+    box-shadow:
+        inset -1px -1px 0px 0px #007a6e,
+        inset 1px 1px 0px 0px #00e5cc,
+        0 0px 0px 0px #000;
 }
 
 /* --------------------------------------------------------------------------
@@ -540,6 +584,74 @@ html, body {
     color: #2ecc71;
     background: rgba(46, 204, 113, 0.1);
 }
+
+/* --------------------------------------------------------------------------
+   7b. INFO PANELS — CRACK TIME & SUGGESTIONS
+   -------------------------------------------------------------------------- */
+.info-panel {
+    background: #070710;
+    border: 2px solid #2a2a40;
+    padding: 10px 12px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease, max-height 0.5s ease, border-color 0.3s ease;
+    pointer-events: none;
+}
+
+.info-panel.visible {
+    opacity: 1;
+    max-height: 300px;
+    pointer-events: auto;
+}
+
+.info-panel-header {
+    font-size: 0.5rem;
+    color: var(--gold-primary);
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.info-panel-value {
+    font-size: 0.7rem;
+    font-family: var(--font-code);
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.info-panel-value.crack-instant  { color: var(--hp-red); }
+.info-panel-value.crack-seconds  { color: var(--hp-red); }
+.info-panel-value.crack-minutes  { color: #e67e22; }
+.info-panel-value.crack-days     { color: var(--hp-yellow); }
+.info-panel-value.crack-years    { color: #a8d8a8; }
+.info-panel-value.crack-strong   { color: var(--hp-green); }
+
+/* Suggestions list */
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.suggestion-item {
+    font-size: 0.5rem;
+    font-family: var(--font-pixel);
+    letter-spacing: 0.5px;
+    padding: 3px 0;
+    opacity: 0;
+    transform: translateX(-4px);
+    animation: suggestion-in 0.3s ease forwards;
+    line-height: 1.6;
+}
+
+@keyframes suggestion-in {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.suggestion-item.ok  { color: var(--hp-green); }
+.suggestion-item.bad { color: var(--hp-red); }
 
 /* --------------------------------------------------------------------------
    8. FOOTER

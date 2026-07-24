@@ -74,6 +74,8 @@
                         <input type="password" id="password-input" placeholder="Enter your password..." autocomplete="new-password">
                         <button type="button" id="toggle-pwd-btn" class="toggle-btn" title="Toggle Password Visibility">👁️</button>
                     </div>
+                    <!-- Generate Strong Password Button -->
+                    <button type="button" id="generate-pwd-btn" class="generate-btn">⚡ GENERATE STRONG PASSWORD</button>
                 </div>
 
                 <!-- Enter / Check Strength Button -->
@@ -96,6 +98,18 @@
                         <div class="check-item" id="req-lower">a-z Lower</div>
                         <div class="check-item" id="req-number">0-9 Numbers</div>
                         <div class="check-item" id="req-special">!@# Special</div>
+                    </div>
+
+                    <!-- Crack Time Panel -->
+                    <div class="info-panel" id="crack-time-panel">
+                        <div class="info-panel-header">🕐 ESTIMATED CRACK TIME</div>
+                        <div class="info-panel-value" id="crack-time-value">—</div>
+                    </div>
+
+                    <!-- Why Is My Password Weak Panel -->
+                    <div class="info-panel" id="suggestions-panel">
+                        <div class="info-panel-header">❓ WHY?</div>
+                        <div id="suggestions-list" class="suggestions-list"></div>
                     </div>
                 </div>
             </div>

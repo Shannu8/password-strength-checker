@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Center Login Window References
     const strengthText = document.getElementById('strength-text');
     const strengthLabel = document.getElementById('strength-label');
+    const crackTimePanel = document.getElementById('crack-time-panel');
+    const crackTimeValue = document.getElementById('crack-time-value');
+    const suggestionsPanel = document.getElementById('suggestions-panel');
+    const suggestionsList = document.getElementById('suggestions-list');
+    const generatePwdBtn = document.getElementById('generate-pwd-btn');
     
     // Background Cross-Fade Layer References
     const bgLayer1 = document.getElementById('bg-layer-1');
@@ -202,6 +207,131 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------------------------
+    // 3b. ENTROPY & CRACK TIME ESTIMATION
+    // ----------------------------------------------------------------------
+
+    /**
+     * Calculates password entropy in bits.
+     * @param {string} pwd
+     * @returns {number} entropy bits
+     */
+    function calculateEntropy(pwd) {
+        if (!pwd || pwd.length === 0) return 0;
+        let pool = 0;
+        if (/[a-z]/.test(pwd)) pool += 26;
+        if (/[A-Z]/.test(pwd)) pool += 26;
+        if (/[0-9]/.test(pwd)) pool += 10;
+        if (/[^a-zA-Z0-9]/.test(pwd)) pool += 32;
+        return pool > 0 ? Math.log2(pool) * pwd.length : 0;
+    }
+
+    /**
+     * Returns a human-readable crack time estimate based on entropy.
+     * Assumes ~10 billion guesses/second (fast offline attack).
+     * @param {number} entropy  bits
+     * @returns {{ label: string, cssClass: string }}
+     */
+    function estimateCrackTime(entropy) {
+        // combinations = 2^entropy, guesses/sec = 1e10
+        const combinations = Math.pow(2, entropy);
+        const seconds = combinations / 1e10;
+
+        if (seconds < 0.001)  return { label: 'INSTANTLY',          cssClass: 'crack-instant' };
+        if (seconds < 1)      return { label: 'LESS THAN A SECOND', cssClass: 'crack-seconds' };
+        if (seconds < 60)     return { label: 'A FEW SECONDS',      cssClass: 'crack-seconds' };
+        if (seconds < 3600)   return { label: 'A FEW MINUTES',      cssClass: 'crack-minutes' };
+        if (seconds < 86400)  return { label: 'SEVERAL HOURS',      cssClass: 'crack-minutes' };
+        if (seconds < 2592000)return { label: 'SEVERAL DAYS',       cssClass: 'crack-days' };
+        if (seconds < 3.15e7) return { label: 'SEVERAL MONTHS',     cssClass: 'crack-days' };
+        if (seconds < 3.15e9) return { label: 'SEVERAL YEARS',      cssClass: 'crack-years' };
+        if (seconds < 3.15e12)return { label: 'CENTURIES',          cssClass: 'crack-strong' };
+        if (seconds < 3.15e16)return { label: 'MILLIONS OF YEARS',  cssClass: 'crack-strong' };
+        return                        { label: 'HEAT DEATH OF THE UNIVERSE', cssClass: 'crack-strong' };
+    }
+
+    /**
+     * Generates live password suggestions.
+     * @param {string} pwd
+     * @returns {Array<{text:string, ok:boolean}>}
+     */
+    function generateSuggestions(pwd) {
+        const hints = [];
+        const hasUpper   = /[A-Z]/.test(pwd);
+        const hasLower   = /[a-z]/.test(pwd);
+        const hasNumber  = /[0-9]/.test(pwd);
+        const hasSpecial = /[^a-zA-Z0-9]/.test(pwd);
+        const len        = pwd.length;
+        const commonPatterns = /^(123|abc|qwerty|password|pass|admin|login|letmein|welcome|monkey|dragon|master)/i;
+
+        // Length
+        if (len < 8)        hints.push({ text: '\u274c Too short — aim for 10+ characters', ok: false });
+        else if (len >= 10) hints.push({ text: '\u2714 Good length',                          ok: true  });
+        else                hints.push({ text: '\u26a0 Acceptable length — 10+ is better',   ok: false });
+
+        // Character variety
+        if (!hasUpper)   hints.push({ text: '\u274c Add uppercase letters (A-Z)',    ok: false });
+        else             hints.push({ text: '\u2714 Contains uppercase letters',      ok: true  });
+
+        if (!hasLower)   hints.push({ text: '\u274c Add lowercase letters (a-z)',    ok: false });
+        else             hints.push({ text: '\u2714 Contains lowercase letters',      ok: true  });
+
+        if (!hasNumber)  hints.push({ text: '\u274c Add numbers (0-9)',               ok: false });
+        else             hints.push({ text: '\u2714 Contains numbers',                ok: true  });
+
+        if (!hasSpecial) hints.push({ text: '\u274c Add symbols (!@#$%...)',          ok: false });
+        else             hints.push({ text: '\u2714 Contains symbols',                ok: true  });
+
+        // Pattern check
+        if (commonPatterns.test(pwd)) hints.push({ text: '\u274c Avoid common patterns (123, abc...)', ok: false });
+
+        // Overall verdict
+        if (hasUpper && hasLower && hasNumber && hasSpecial && len >= 10) {
+            hints.push({ text: '\u2714 Excellent password!', ok: true });
+        } else if (hasUpper && hasLower && hasNumber && len >= 8) {
+            hints.push({ text: '\u26a0 Good — add symbols for maximum strength', ok: false });
+        }
+
+        return hints;
+    }
+
+    /**
+     * Generates a cryptographically strong password of 16-20 chars.
+     * Avoids ambiguous characters: O, 0, l, I.
+     * @returns {string}
+     */
+    function generatePassword() {
+        const upper   = 'ABCDEFGHJKMNPQRSTUVWXYZ';   // no O, I
+        const lower   = 'abcdefghjkmnpqrstuvwxyz';   // no l
+        const numbers = '23456789';                   // no 0
+        const symbols = '!@#$%^&*-+=?';
+        const all     = upper + lower + numbers + symbols;
+
+        const length = 16 + Math.floor(Math.random() * 5); // 16–20
+        const arr = new Uint32Array(length);
+        crypto.getRandomValues(arr);
+
+        // Guarantee at least one from each set
+        const mandatory = [
+            upper  [arr[0] % upper.length],
+            lower  [arr[1] % lower.length],
+            numbers[arr[2] % numbers.length],
+            symbols[arr[3] % symbols.length]
+        ];
+
+        const rest = Array.from(arr.slice(4)).map(n => all[n % all.length]);
+        const combined = [...mandatory, ...rest].slice(0, length);
+
+        // Shuffle using Fisher-Yates with crypto random
+        const shuffleArr = new Uint32Array(combined.length);
+        crypto.getRandomValues(shuffleArr);
+        for (let i = combined.length - 1; i > 0; i--) {
+            const j = shuffleArr[i] % (i + 1);
+            [combined[i], combined[j]] = [combined[j], combined[i]];
+        }
+        return combined.join('');
+    }
+
+    // ----------------------------------------------------------------------
     // 4. UI UPDATE FUNCTIONS (REQUIRED BY PROMPT)
     // ----------------------------------------------------------------------
 
@@ -348,6 +478,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateChecklist(pwd);
+
+        // --- FEATURE 1: Crack Time ---
+        if (pwd.length > 0) {
+            const entropy  = calculateEntropy(pwd);
+            const crack    = estimateCrackTime(entropy);
+            crackTimeValue.textContent = crack.label;
+            crackTimeValue.className   = `info-panel-value ${crack.cssClass}`;
+            crackTimePanel.classList.add('visible');
+        } else {
+            crackTimePanel.classList.remove('visible');
+        }
+
+        // --- FEATURE 2: Suggestions ---
+        if (pwd.length > 0) {
+            const hints = generateSuggestions(pwd);
+            suggestionsList.innerHTML = '';
+            hints.forEach((h, i) => {
+                const el = document.createElement('div');
+                el.className = `suggestion-item ${h.ok ? 'ok' : 'bad'}`;
+                el.textContent = h.text;
+                el.style.animationDelay = `${i * 40}ms`;
+                suggestionsList.appendChild(el);
+            });
+            suggestionsPanel.classList.add('visible');
+        } else {
+            suggestionsPanel.classList.remove('visible');
+            suggestionsList.innerHTML = '';
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -411,6 +569,21 @@ document.addEventListener('DOMContentLoaded', () => {
             togglePwdBtn.textContent = '👁️';
         }
     });
+
+    // --- FEATURE 3: Generate Strong Password ---
+    if (generatePwdBtn) {
+        generatePwdBtn.addEventListener('click', () => {
+            playRetroSound('upgrade');
+            const newPwd = generatePassword();
+            passwordInput.value = newPwd;
+            // If hidden (type=password is fine), keep as-is
+            // Trigger full update exactly as if user typed
+            processPasswordCheck(false);
+            // Brief visual flash on button
+            generatePwdBtn.classList.add('btn-flash');
+            setTimeout(() => generatePwdBtn.classList.remove('btn-flash'), 300);
+        });
+    }
 
     // Initial State Setup
     passwordInput.value = '';
