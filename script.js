@@ -483,8 +483,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pwd.length > 0) {
             const entropy  = calculateEntropy(pwd);
             const crack    = estimateCrackTime(entropy);
-            crackTimeValue.textContent = crack.label;
-            crackTimeValue.className   = `info-panel-value ${crack.cssClass}`;
+            const crackVal = document.getElementById('crack-time-value');
+            const crackBadge = document.getElementById('crack-entropy-badge');
+            if (crackVal) {
+                crackVal.textContent = crack.label;
+                crackVal.className   = `crack-panel-value ${crack.cssClass}`;
+            }
+            if (crackBadge) {
+                crackBadge.textContent = `${Math.round(entropy)} BITS`;
+            }
             crackTimePanel.classList.add('visible');
         } else {
             crackTimePanel.classList.remove('visible');

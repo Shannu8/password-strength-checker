@@ -591,7 +591,6 @@ html, body {
 .info-panel {
     background: #070710;
     border: 2px solid #2a2a40;
-    padding: 10px 12px;
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -601,32 +600,100 @@ html, body {
 
 .info-panel.visible {
     opacity: 1;
-    max-height: 300px;
+    max-height: 400px;
     pointer-events: auto;
 }
 
+/* ---- Crack Time Panel specific layout ---- */
+.crack-panel {
+    padding: 0;
+    border-color: #2a2a40;
+}
+
+.crack-panel-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px 8px;
+    background: #0d0d1c;
+}
+
+.crack-panel-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.crack-panel-title {
+    font-size: 0.45rem;
+    color: var(--gold-primary);
+    letter-spacing: 1.5px;
+    text-shadow: 1px 1px 0px #000;
+    flex: 1;
+}
+
+.crack-entropy-badge {
+    font-size: 0.42rem;
+    font-family: var(--font-code);
+    color: #555a7a;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.crack-panel-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #2a2a40 20%, #2a2a40 80%, transparent);
+    margin: 0;
+}
+
+.crack-panel-value-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px 12px;
+}
+
+.crack-panel-value {
+    font-size: 1.05rem;
+    font-family: var(--font-code);
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    transition: color 0.35s ease;
+    text-shadow: 0 0 8px currentColor;
+    line-height: 1;
+}
+
+.crack-panel-sub {
+    font-size: 0.38rem;
+    font-family: var(--font-pixel);
+    color: #383850;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    align-self: flex-end;
+    padding-bottom: 2px;
+}
+
+/* Crack time color classes applied to .crack-panel-value */
+.crack-panel-value.crack-instant  { color: var(--hp-red);   text-shadow: 0 0 10px rgba(231,76,60,0.5); }
+.crack-panel-value.crack-seconds  { color: var(--hp-red);   text-shadow: 0 0 10px rgba(231,76,60,0.5); }
+.crack-panel-value.crack-minutes  { color: #e67e22;          text-shadow: 0 0 10px rgba(230,126,34,0.5); }
+.crack-panel-value.crack-days     { color: var(--hp-yellow); text-shadow: 0 0 10px rgba(241,196,15,0.4); }
+.crack-panel-value.crack-years    { color: #a8d8a8;          text-shadow: 0 0 10px rgba(168,216,168,0.4); }
+.crack-panel-value.crack-strong   { color: var(--hp-green);  text-shadow: 0 0 12px rgba(46,204,113,0.5); }
+
+/* Legacy .info-panel-value kept for suggestions panel header */
 .info-panel-header {
-    font-size: 0.5rem;
+    font-size: 0.45rem;
     color: var(--gold-primary);
     letter-spacing: 1px;
-    margin-bottom: 7px;
+    margin-bottom: 8px;
     text-shadow: 1px 1px 0px #000;
 }
 
-.info-panel-value {
-    font-size: 0.7rem;
-    font-family: var(--font-code);
-    letter-spacing: 1px;
-    color: var(--text-muted);
-    transition: color 0.3s ease, opacity 0.3s ease;
+/* Suggestions panel uses standard padding */
+#suggestions-panel {
+    padding: 12px 14px;
 }
-
-.info-panel-value.crack-instant  { color: var(--hp-red); }
-.info-panel-value.crack-seconds  { color: var(--hp-red); }
-.info-panel-value.crack-minutes  { color: #e67e22; }
-.info-panel-value.crack-days     { color: var(--hp-yellow); }
-.info-panel-value.crack-years    { color: #a8d8a8; }
-.info-panel-value.crack-strong   { color: var(--hp-green); }
 
 /* Suggestions list */
 .suggestions-list {
