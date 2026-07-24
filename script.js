@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Center Login Window References
     const strengthText = document.getElementById('strength-text');
+    const strengthLabel = document.getElementById('strength-label');
     
     // Background Cross-Fade Layer References
     const bgLayer1 = document.getElementById('bg-layer-1');
@@ -240,6 +241,22 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 strengthText.classList.remove('pop-anim');
             }, 200);
+        }
+        // Update the strength label badge
+        if (strengthLabel) {
+            const labelMap = {
+                weak:     { text: '⚠ WEAK',     cls: 'label-weak' },
+                moderate: { text: '◈ MODERATE',  cls: 'label-moderate' },
+                strong:   { text: '✦ STRONG',    cls: 'label-strong' }
+            };
+            const entry = labelMap[tier];
+            if (entry) {
+                strengthLabel.textContent = entry.text;
+                strengthLabel.className = `strength-label ${entry.cls} visible`;
+            } else {
+                strengthLabel.textContent = '';
+                strengthLabel.className = 'strength-label';
+            }
         }
     }
 

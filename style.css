@@ -447,7 +447,7 @@ html, body {
 
 .strength-dialogue-box {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     background: #090912;
     border: 3px solid var(--gold-dark);
@@ -457,6 +457,51 @@ html, body {
 
 .dialogue-icon {
     font-size: 1.2rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.strength-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+/* Strength label badge — inline pill above the message */
+.strength-label {
+    display: inline-block;
+    font-size: 0.5rem;
+    letter-spacing: 1.5px;
+    padding: 2px 7px;
+    font-family: var(--font-pixel);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    pointer-events: none;
+    align-self: flex-start;
+}
+
+.strength-label.visible {
+    opacity: 1;
+}
+
+.strength-label.label-weak {
+    background: rgba(231, 76, 60, 0.18);
+    color: var(--hp-red);
+    border: 1px solid var(--hp-red);
+}
+
+.strength-label.label-moderate {
+    background: rgba(241, 196, 15, 0.15);
+    color: var(--hp-yellow);
+    border: 1px solid var(--hp-yellow);
+}
+
+.strength-label.label-strong {
+    background: rgba(46, 204, 113, 0.15);
+    color: var(--hp-green);
+    border: 1px solid var(--hp-green);
 }
 
 .strength-text {
