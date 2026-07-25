@@ -187,11 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
             label: 'ARMOR EQUIPPED'
         };
     }
-
-    // ----------------------------------------------------------------------
-    // 3b. ENTROPY & CRACK TIME ESTIMATION
-    // ----------------------------------------------------------------------
-
     /**
      * Calculates password entropy in bits.
      * @param {string} pwd
@@ -312,11 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return combined.join('');
     }
-
-    // ----------------------------------------------------------------------
-    // 4. UI UPDATE FUNCTIONS (REQUIRED BY PROMPT)
-    // ----------------------------------------------------------------------
-
     /**
      * Updates Knight Profile HUD avatar & equipment tag.
      */
@@ -497,9 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // 5. EVENT LISTENERS
-    // ----------------------------------------------------------------------
     // Hero Name typing updates HUD knight title & clears error
     if (usernameInput) {
         usernameInput.addEventListener('input', () => {
