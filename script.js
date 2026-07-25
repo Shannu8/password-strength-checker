@@ -1,6 +1,3 @@
-/* ==========================================================================
-   RETRO FANTASY RPG LOGIN & DYNAMIC BACKGROUND LOGIC (script.js)
-   ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Element References
@@ -94,12 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // 2. BACKGROUND TRANSITION MANAGER
-    // ----------------------------------------------------------------------
-    /**
-     * Cross-fades full-screen page background image smoothly.
-     */
     function transitionBackground(imageSrc) {
         if (currentBgSrc === imageSrc) return;
         currentBgSrc = imageSrc;
@@ -117,15 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ----------------------------------------------------------------------
-    // 3. PASSWORD EVALUATION LOGIC
-    // ----------------------------------------------------------------------
-
-    /**
-     * Evaluates password text and returns tier state object.
-     * @param {string} pwd
-     * @returns {object} { tier, percentage, colorClass, message, knightImage, label }
-     */
     function evaluatePassword(pwd) {
         if (!pwd || pwd.length === 0) {
             return {
