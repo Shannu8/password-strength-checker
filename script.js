@@ -1,8 +1,4 @@
 
-
-
-
-s
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Element References
     const usernameInput = document.getElementById('username-input');
